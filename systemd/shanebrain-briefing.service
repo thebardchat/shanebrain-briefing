@@ -6,6 +6,7 @@ Wants=network-online.target
 [Service]
 Type=oneshot
 ExecStart=/usr/bin/python3 /mnt/shanebrain-raid/shanebrain-core/shanebrain-briefing/briefing.py
+ExecStart=/usr/bin/python3 /mnt/shanebrain-raid/shanebrain-core/pico-nerve-endings/projects/audio-speaker/host/tts_briefing.py --local
 User=shanebrain
 StandardOutput=journal
 StandardError=journal
