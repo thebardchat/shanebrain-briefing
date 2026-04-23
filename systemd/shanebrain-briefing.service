@@ -1,0 +1,11 @@
+[Unit]
+Description=ShaneBrain Daily Briefing
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /mnt/shanebrain-raid/shanebrain-core/shanebrain-briefing/briefing.py
+User=shanebrain
+StandardOutput=journal
+StandardError=journal
