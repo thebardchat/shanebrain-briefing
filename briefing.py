@@ -11,8 +11,7 @@ from datetime import date, datetime, timezone
 SOBRIETY_START = date(2023, 11, 27)
 BRIEFING_LOG_DIR = "/mnt/shanebrain-raid/shanebrain-core/briefings"
 NTFY_TOPIC = "shanebrain-briefing"
-NTFY_URL = f"http://localhost:80/{NTFY_TOPIC}"
-NTFY_FALLBACK = f"https://ntfy.sh/{NTFY_TOPIC}"
+NTFY_URL = f"https://ntfy.sh/{NTFY_TOPIC}"
 
 MOTIVATIONAL_LINES = [
     "You built a Pi cluster from scratch. Today is nothing.",
@@ -156,22 +155,19 @@ def build_briefing():
 
 
 def send_ntfy(text):
-    # Try self-hosted first, fall back to ntfy.sh
-    for url in [NTFY_URL, NTFY_FALLBACK]:
-        try:
-            result = subprocess.run(
-                ["curl", "-s", "-o", "/dev/null", "-w", "%{http_code}",
-                 "-d", text, url],
-                capture_output=True, text=True, timeout=15
-            )
-            code = result.stdout.strip()
-            if code in ("200", "201", "204"):
-                print(f"Delivered to {url} (HTTP {code})")
-                return True
-            else:
-                print(f"ntfy returned HTTP {code} for {url}, trying next...")
-        except Exception as e:
-            print(f"ntfy send failed for {url}: {e}")
+    try:
+        result = subprocess.run(
+            ["curl", "-s", "-o", "/dev/null", "-w", "%{http_code}",
+             "-d", text, NTFY_URL],
+            capture_output=True, text=True, timeout=15
+        )
+        code = result.stdout.strip()
+        if code in ("200", "201", "204"):
+            print(f"Delivered to {NTFY_URL} (HTTP {code})")
+            return True
+        print(f"ntfy returned HTTP {code}")
+    except Exception as e:
+        print(f"ntfy send failed: {e}")
     return False
 
 
